@@ -26,23 +26,30 @@ class Dressmodel extends CI_Model {
 			return false;
 		}
 	}
+	
+	function favouriteDress($userId, $dressId)
+	{
+		#TODO: could check if an entry already exists for this user and dress
+		$data = array(
+		   'user_id' => $userId,
+		   'dress_id' => $dressId,
+		);
 
-    // function insert_entry()
-    // {
-    //     $this->title   = $_POST['title']; // please read the below note
-    //     $this->content = $_POST['content'];
-    //     $this->date    = time();
-    // 
-    //     $this->db->insert('entries', $this);
-    // }
-    // 
-    // function update_entry()
-    // {
-    //     $this->title   = $_POST['title'];
-    //     $this->content = $_POST['content'];
-    //     $this->date    = time();
-    // 
-    //     $this->db->update('entries', $this, array('id' => $_POST['id']));
-    // }
-
+		$this->db->insert('user_dress', $data);	
+	}
+	
+	function getFavourites($userId)
+	{
+		$this->db->select('*');
+		$this->db->from('dress');
+		$this->db->join('user_dress', 'user_dress.dress_id = dress.id');
+		$this->db->where('user_dress.user_id', $userId);
+		$results = $this->db->get();
+		
+		// Convert into same format as the getAll result
+		foreach ($results->result() as $row) {
+			$return[] = $row;
+		}
+		return $return;
+	}
 }

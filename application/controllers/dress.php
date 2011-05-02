@@ -8,8 +8,6 @@ class Dress extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->helper(array('form', 'url'));
-		//$this->load->library('form_validation');
-		//$this->load->library('security');
 		$this->load->library('tank_auth');
 		$this->lang->load('tank_auth');
 		$this->data = array();
@@ -32,7 +30,6 @@ class Dress extends CI_Controller {
 		
 	public function index()
 	{
-		#TODO? refactor to call this getAll and use routes to set this as the index?
 		$this->load->model('Dressmodel', '', TRUE);
 		$data = $this->data;
 		$data['dresses'] = $this->Dressmodel->getAll();
@@ -45,7 +42,7 @@ class Dress extends CI_Controller {
 	
 	public function view($id)
 	{
-		#TODO: could use Codeigniter built in url matching from routes here
+		// NOTE: could use Codeigniter built in url matching from routes here
 		if(preg_match( '/^[0-9]+$/', $id) == FALSE){
 			redirect(base_url());
 		}
@@ -65,11 +62,37 @@ class Dress extends CI_Controller {
 	
 	public function star($id)
 	{
-		echo 'starring dress';
-		exit();
-		// validation of id
-		// check for user (already in $this->data)
-		// add to db (function in dress model)
-		// redirect
+		// NOTE: could use Codeigniter built in url matching from routes here
+		if(preg_match( '/^[0-9]+$/', $id) == FALSE){
+			redirect(base_url());
+		}
+		
+		$data = $this->data;
+		if ($data['logged_in'] == FALSE){
+			redirect('/auth/login');
+		}
+		$userId = $this->tank_auth->get_user_id();
+		
+		$this->load->model('Dressmodel', '', TRUE);
+		$dressDetails = $this->Dressmodel->favouriteDress($userId, $id);
+		
+		redirect('/dress/view/' . $id);
+	}
+	
+	public function favourites()
+	{
+		$data = $this->data;
+		if ($data['logged_in'] == FALSE){
+			redirect('/auth/login');
+		}
+		$userId = $this->tank_auth->get_user_id();
+		
+		$this->load->model('Dressmodel', '', TRUE);
+		$data['dresses'] = $this->Dressmodel->getFavourites($userId);
+		
+		$data['page_title'] = 'Your Favourites';
+		$this->load->view('header', $data);
+		$this->load->view('all_dresses', $data);
+		$this->load->view('footer');
 	}
 }
