@@ -49,6 +49,12 @@ code {
 
 <p>Look at our beautiful dresses</p>
 
+<?php foreach($dresses as $key => $dress): ?>
+	<h2><?php echo $dress->name; ?></h2>
+	<img src="/_includes/images/<?php echo $dress->image_url; ?>" />
+	<p>£<?php echo $dress->price; ?></p>
+<?php endforeach; ?>
+
 <p><br />Page rendered in {elapsed_time} seconds</p>
 
 </body>

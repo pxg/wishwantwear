@@ -11,9 +11,9 @@ class Dressmodel extends CI_Model {
         parent::__construct();
     }
     
-    function get_last_ten_entries()
+    function get_all()
     {
-        $query = $this->db->get('dress', 10);
+        $query = $this->db->get('dress');
         return $query->result();
     }
 
