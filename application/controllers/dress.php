@@ -2,6 +2,8 @@
 
 class Dress extends CI_Controller {
 	
+	var $data;
+	
 	public function __construct()
 	{
 		parent::__construct();
@@ -10,11 +12,13 @@ class Dress extends CI_Controller {
 		//$this->load->library('security');
 		$this->load->library('tank_auth');
 		$this->lang->load('tank_auth');
-	}
+		$this->data = array();
 		
-	public function index()
+		$this->userStatus();
+	}
+	
+	private function userStatus()
 	{
-		#TODO: move this to the constructor? shall we use $this->data instead? Maybe we could set header there
 		$userName = '';
 		if ($this->tank_auth->is_logged_in()) {
 			$loggedIn = TRUE;
@@ -22,15 +26,18 @@ class Dress extends CI_Controller {
 		}else{
 			$loggedIn = FALSE;
 		}
+		$this->data['logged_in'] = $loggedIn;
+		$this->data['username'] = $userName;
+	}
 		
+	public function index()
+	{
 		#TODO? refactor to call this getAll and use routes to set this as the index?
 		$this->load->model('Dressmodel', '', TRUE);
+		$data = $this->data;
 		$data['dresses'] = $this->Dressmodel->get_all();
-		$data['page_title'] = 'Dress Catalogue';
-		#TODO? can we assign all of these together?
-		$data['logged_in'] = $loggedIn;
-		$data['username'] = $userName;
 		
+		$data['page_title'] = 'Dress Catalogue';
 		$this->load->view('header', $data);
 		$this->load->view('all_dresses', $data);
 		$this->load->view('footer');
@@ -43,11 +50,12 @@ class Dress extends CI_Controller {
 			redirect(base_url());
 		}
 		
-		#TODO: lookup dress in DB here
 		$this->load->model('Dressmodel', '', TRUE);
-		$data['dresses'] = $this->Dressmodel->get_all();
+		$data = $this->data;
+		#TODO: build in function to get one entry from model?
+		$data['dress_details'] = $this->Dressmodel->get_all();
 		
-		#TODO: get user info here (can we put in constructor?)
+		$data['page_title'] = 'Dress Details';
 		$this->load->view('header', $data);
 		$this->load->view('dress_detail', $data);
 		$this->load->view('footer');
