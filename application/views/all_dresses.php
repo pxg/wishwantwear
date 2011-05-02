@@ -3,7 +3,7 @@
 <?php foreach($dresses as $key => $dress): ?>
 	<h2><?php echo $dress->name; ?></h2>
 	
-	<a href="index.php/dress/view/<?php echo $dress->id; ?>">
+	<a href="/dress/view/<?php echo $dress->id; ?>">
 	<img src="/_includes/images/<?php echo $dress->image_url; ?>" />
 	</a>
 	

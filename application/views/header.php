@@ -47,9 +47,9 @@ code {
 
 <div id="user_status">
 <?php if($logged_in): ?>
-	<p><?php echo $username ?> <a href="/index.php/auth/logout">logout</a></p>
+	<p><?php echo $username ?> <a href="/auth/logout">logout</a></p>
 <?php else: ?>
-	<p><a href="/index.php/auth/login">login</a></p>
+	<p><a href="/auth/login">login</a></p>
 <?php endif; ?>
 </div>
 

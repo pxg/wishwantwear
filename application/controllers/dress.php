@@ -35,7 +35,7 @@ class Dress extends CI_Controller {
 		#TODO? refactor to call this getAll and use routes to set this as the index?
 		$this->load->model('Dressmodel', '', TRUE);
 		$data = $this->data;
-		$data['dresses'] = $this->Dressmodel->get_all();
+		$data['dresses'] = $this->Dressmodel->getAll();
 		
 		$data['page_title'] = 'Dress Catalogue';
 		$this->load->view('header', $data);
@@ -52,12 +52,24 @@ class Dress extends CI_Controller {
 		
 		$this->load->model('Dressmodel', '', TRUE);
 		$data = $this->data;
-		#TODO: build in function to get one entry from model?
-		$data['dress_details'] = $this->Dressmodel->get_all();
-		
-		$data['page_title'] = 'Dress Details';
+		$dressDetails = $this->Dressmodel->getOne($id);
+		if($dressDetails == FALSE){
+			redirect(base_url());
+		}
+		$data['dress'] = $dressDetails;
+		$data['page_title'] = $dressDetails->name . ' > Dress Details';
 		$this->load->view('header', $data);
 		$this->load->view('dress_detail', $data);
 		$this->load->view('footer');
+	}
+	
+	public function star($id)
+	{
+		echo 'starring dress';
+		exit();
+		// validation of id
+		// check for user (already in $this->data)
+		// add to db (function in dress model)
+		// redirect
 	}
 }
